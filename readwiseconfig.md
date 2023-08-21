@@ -1,47 +1,59 @@
-# Fielname:
-  ```
-{{author}} - {{title}}
+# Filename:
+```
+{{title}} by {{author}}
 ```
 
 # Page Title
 ```
-  # {{ title }}
+# {{ title }}
 ```
 # Page Metadata:
-```
-{% if image_url -%}
-![rw-book-cover]({{image_url}})
+````
+#note/refnote #note/readwise
 
+## Metadata
+- Summary:: 
+- Status:: #x/unprocessed
+- Author:: {% if author %}{{author}}{% endif %}
+{% if document_tags -%}
+- Tags:: #readwise {% for tag in document_tags %}#on/{{tag}} {% endfor %}
 {% endif -%}
 {% if url -%}
-- URL: {{url}}
+- Source:: {{url}}
 {% endif -%}
+- Category:: #source/{{category}}
+
+## Links
+```dataview
+TABLE file.cday AS "Date"
+FROM [[<% tp.file.title %>]]
+sort date ASCENDING
 ```
+````
 
 # Highlights Header
 ```
 {% if is_new_page %}
 ## Highlights
 {% elif has_new_highlights -%}
-## New highlights added {{date|date('F j, Y')}} at {{time}}
+## New highlights added [[{{date}}]]
 {% endif -%}
 ```
 
 # Highlight
-```
-### {% if highlight_location != "View Highlight" and highlight_location != "View Tweet" %}{{highlight_location}}{% else %}id{{highlight_id}}{% endif %}
-
-> {{ highlight_text }}
+````
+> {{ highlight_text }}{% if highlight_location and highlight_location_url %} ([{{highlight_location}}]({{highlight_location_url}})){% elif highlight_location %} ({{highlight_location}}){% endif %}
+{% if highlight_tags -%}
+- Tags: {% for tag in highlight_tags %}#on/{{tag}} {% endfor %}
+{% endif -%}
 {% if highlight_note %}
-- [n] {{ highlight_note }}
-{% endif %}
-{% if highlight_location and highlight_location_url %} * [{{highlight_location}}]({{highlight_location_url}}){% elif highlight_location %} ({{highlight_location}}){% endif %}
-```
+```ad-note
+{{ highlight_note }}
+```{% endif %}
+
+````
 
 # YAML frontmatter
 ```
-Author: {{author}}
-Tags: RW_inbox, readwise
-Note Created: <% tp.date.now("dddd Do MMMM YYYY HH:mm") %>
-Last modified: <% tp.file.last_modified_date("dddd Do MMMM YYYY HH:mm") %>
+
 ```
